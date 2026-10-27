@@ -6,6 +6,8 @@ export interface NoteEvent {
   onset: number;
   /** Duration in seconds. */
   duration: number;
+  /** Detector confidence / loudness, 0..1. Only present on transcribed notes. */
+  velocity?: number;
 }
 
 export type ErrorType = 'missed' | 'extra' | 'wrong_pitch' | 'early' | 'late';

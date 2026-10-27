@@ -10,6 +10,7 @@
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate dev && prisma generate",
     "build": "nest build",
+    "demo:audio": "nest build && node scripts/generate-demo-audio.mjs",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

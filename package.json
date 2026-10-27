@@ -10,9 +10,10 @@
     "dev": "concurrently -n web,api,asr -c cyan,magenta,yellow \"npm:dev:web\" \"npm:dev:api\" \"npm:dev:asr\"",
     "dev:web": "npm run dev -w frontend",
     "dev:api": "npm run start:dev -w backend",
-    "dev:asr": "python transcriber/main.py",
+    "dev:asr": "node scripts/transcriber.mjs run",
     "build": "npm run build -w backend && npm run build -w frontend",
-    "test": "npm run test -w backend"
+    "test": "npm run test -w backend",
+    "setup:asr": "node scripts/transcriber.mjs setup"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
