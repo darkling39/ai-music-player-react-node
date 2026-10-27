@@ -44,7 +44,7 @@ export function SummaryCards({ analysis }: { analysis: AnalysisResult }) {
         {counts.late + counts.early > 0 && <Badge variant="outline">Ритм · {counts.late + counts.early}</Badge>}
         {counts.ignoredNoise > 0 && (
           <span className="text-xs text-muted-foreground">
-            ({counts.ignoredNoise} слабых срабатываний распознавания не засчитаны как ошибки)
+            Слабых срабатываний распознавания, не засчитанных как ошибки: {counts.ignoredNoise}
           </span>
         )}
       </div>

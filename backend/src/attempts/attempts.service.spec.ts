@@ -8,6 +8,7 @@ import type { NoteEvent } from '../common/domain/music.types.js';
 import type { PrismaService } from '../database/prisma.service.js';
 import { parseMusicXml } from '../scores/parsers/musicxml.parser.js';
 import type { ScoresService } from '../scores/scores.service.js';
+import { RuleBasedFeedbackGenerator } from '../feedback/rule-based-feedback.generator.js';
 import type { TranscriptionService } from '../transcription/transcription.service.js';
 import { AttemptsService } from './attempts.service.js';
 
@@ -48,6 +49,7 @@ describe('AttemptsService', () => {
       { get: () => uploads } as unknown as ConfigService,
       scores,
       { transcribe } as unknown as TranscriptionService,
+      new RuleBasedFeedbackGenerator(),
     );
   });
 
@@ -60,6 +62,8 @@ describe('AttemptsService', () => {
 
     expect(attempt).toMatchObject({ scoreId: 's1', scoreTitle: score.title, accuracy: 87.1, errorCount: 4 });
     expect(attempt.analysis.problemMeasures.sort()).toEqual([3, 5, 6, 7]);
+    expect(attempt.feedback.errorMessages).toHaveLength(4);
+    expect(attempt.feedback.practicePlan.length).toBeGreaterThan(0);
     expect(existsSync(await service.audioPath(attempt.id))).toBe(true);
   });
 
@@ -70,6 +74,7 @@ describe('AttemptsService', () => {
     expect(summary).toMatchObject({ accuracy: 87.1, errorCount: 4 });
     expect(summary).not.toHaveProperty('analysis');
     expect(summary).not.toHaveProperty('performed');
+    expect(summary).not.toHaveProperty('feedback');
   });
 
   it('refuses unknown scores before doing any transcription work', async () => {

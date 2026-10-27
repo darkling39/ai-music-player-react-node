@@ -5,12 +5,13 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useScore } from '@/features/scores/api'
-import { describeError, describePosition } from '@/lib/music'
+import { describePosition } from '@/lib/music'
 import { attemptAudioUrl, useAttempt } from '../api'
 import { ErrorList } from '../components/ErrorList'
 import { Keyboard } from '../components/Keyboard'
 import { MeasureStrip } from '../components/MeasureStrip'
 import { PianoRoll, PianoRollLegend } from '../components/PianoRoll'
+import { Recommendations } from '../components/Recommendations'
 import { SummaryCards } from '../components/SummaryCards'
 
 export function AttemptPage() {
@@ -29,7 +30,7 @@ export function AttemptPage() {
   }
   if (!attempt.data || !score.data) return <Skeleton className="h-96 w-full" />
 
-  const { analysis } = attempt.data
+  const { analysis, feedback } = attempt.data
   const error = selected === null ? undefined : analysis.errors[selected]
   const selectMeasure = (measure: number) => setSelected(analysis.errors.findIndex((e) => e.measure === measure))
 
@@ -49,6 +50,8 @@ export function AttemptPage() {
       </div>
 
       <SummaryCards analysis={analysis} />
+
+      <Recommendations feedback={feedback} />
 
       <Card>
         <CardHeader>
@@ -80,7 +83,7 @@ export function AttemptPage() {
               />
               <div className="space-y-1 text-sm">
                 <p className="font-medium">{describePosition(error)}</p>
-                <p>{describeError(error)}</p>
+                <p>{feedback.errorMessages[selected!]}</p>
                 <p className="text-xs text-muted-foreground">
                   <span className="mr-3 inline-flex items-center gap-1"><span className="inline-block size-2.5 rounded-sm bg-emerald-400" />нужная клавиша</span>
                   <span className="inline-flex items-center gap-1"><span className="inline-block size-2.5 rounded-sm bg-red-400" />нажатая клавиша</span>
@@ -96,7 +99,7 @@ export function AttemptPage() {
           <CardTitle>Все ошибки</CardTitle>
         </CardHeader>
         <CardContent>
-          <ErrorList errors={analysis.errors} selected={selected} onSelect={setSelected} />
+          <ErrorList errors={analysis.errors} messages={feedback.errorMessages} selected={selected} onSelect={setSelected} />
         </CardContent>
       </Card>
     </>

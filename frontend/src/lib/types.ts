@@ -72,7 +72,29 @@ export interface AttemptSummary {
   errorCount: number
 }
 
+export interface Recommendation {
+  title: string
+  detail: string
+  measures: number[]
+}
+
+export interface PracticeStep {
+  title: string
+  detail: string
+  measures?: { from: number; to: number }
+  tempoBpm?: number
+}
+
+export interface Feedback {
+  summary: string
+  /** One explanation per entry of analysis.errors, same order. */
+  errorMessages: string[]
+  recommendations: Recommendation[]
+  practicePlan: PracticeStep[]
+}
+
 export interface AttemptDetails extends AttemptSummary {
   analysis: AnalysisResult
+  feedback: Feedback
   performed: NoteEvent[]
 }

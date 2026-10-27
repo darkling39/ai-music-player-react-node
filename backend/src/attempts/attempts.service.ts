@@ -7,6 +7,7 @@ import { AnalysisResult } from '../analysis/analysis.types.js';
 import { analyzePerformance } from '../analysis/performance-analyzer.js';
 import type { NoteEvent } from '../common/domain/music.types.js';
 import { PrismaService } from '../database/prisma.service.js';
+import { Feedback, FeedbackGenerator } from '../feedback/feedback.types.js';
 import { ScoresService } from '../scores/scores.service.js';
 import { TranscriptionService } from '../transcription/transcription.service.js';
 
@@ -21,6 +22,8 @@ export interface AttemptSummary {
 
 export interface AttemptDetails extends AttemptSummary {
   analysis: AnalysisResult;
+  /** Explanations, recommendations and a practice plan derived from the analysis. */
+  feedback: Feedback;
   /** Notes detected in the recording, kept so the analysis can be re-run or inspected. */
   performed: NoteEvent[];
 }
@@ -28,6 +31,14 @@ export interface AttemptDetails extends AttemptSummary {
 interface StoredResult {
   analysis: AnalysisResult;
   performed: NoteEvent[];
+}
+
+interface AttemptRow {
+  id: string;
+  scoreId: string;
+  createdAt: Date;
+  resultJson: string | null;
+  score: { title: string };
 }
 
 @Injectable()
@@ -39,6 +50,7 @@ export class AttemptsService {
     config: ConfigService,
     private readonly scores: ScoresService,
     private readonly transcription: TranscriptionService,
+    private readonly feedback: FeedbackGenerator,
   ) {
     this.uploadsDir = resolve(config.get<string>('UPLOADS_DIR', './uploads'));
   }
@@ -72,10 +84,7 @@ export class AttemptsService {
       include: { score: { select: { title: true } } },
       orderBy: { createdAt: 'desc' },
     });
-    return rows.map((row) => {
-      const { performed: _performed, analysis: _analysis, ...summary } = this.toDetails(row);
-      return summary;
-    });
+    return rows.map((row) => this.toSummary(row, this.parse(row).analysis));
   }
 
   async get(id: string): Promise<AttemptDetails> {
@@ -92,14 +101,11 @@ export class AttemptsService {
     return row;
   }
 
-  private toDetails(row: {
-    id: string;
-    scoreId: string;
-    createdAt: Date;
-    resultJson: string | null;
-    score: { title: string };
-  }): AttemptDetails {
-    const { analysis, performed } = JSON.parse(row.resultJson ?? '{}') as StoredResult;
+  private parse(row: AttemptRow): StoredResult {
+    return JSON.parse(row.resultJson ?? '{}') as StoredResult;
+  }
+
+  private toSummary(row: AttemptRow, analysis: AnalysisResult): AttemptSummary {
     return {
       id: row.id,
       scoreId: row.scoreId,
@@ -107,7 +113,15 @@ export class AttemptsService {
       createdAt: row.createdAt,
       accuracy: analysis.accuracy,
       errorCount: analysis.errors.length,
+    };
+  }
+
+  private toDetails(row: AttemptRow): AttemptDetails {
+    const { analysis, performed } = this.parse(row);
+    return {
+      ...this.toSummary(row, analysis),
       analysis,
+      feedback: this.feedback.generate(analysis),
       performed,
     };
   }
