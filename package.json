@@ -13,7 +13,8 @@
     "dev:asr": "node scripts/transcriber.mjs run",
     "build": "npm run build -w backend && npm run build -w frontend",
     "test": "npm run test -w backend",
-    "setup:asr": "node scripts/transcriber.mjs setup"
+    "setup:asr": "node scripts/transcriber.mjs setup",
+    "setup": "node scripts/setup.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
