@@ -25,8 +25,11 @@ function removeNoise(performed: NoteEvent[]): { kept: NoteEvent[]; ignored: numb
   return { kept, ignored: performed.length - kept.length };
 }
 
+/** The part of a score the analysis needs. */
+export type ReferenceScore = Pick<ParsedScore, 'tempoBpm' | 'beatsPerMeasure' | 'measureCount' | 'notes'>;
+
 /** Compares a transcribed performance with the reference score and classifies every difference. */
-export function analyzePerformance(score: ParsedScore, performed: NoteEvent[]): AnalysisResult {
+export function analyzePerformance(score: ReferenceScore, performed: NoteEvent[]): AnalysisResult {
   const { kept, ignored } = removeNoise(performed);
   const pairs = alignNotes<ScoreNote>(score.notes, kept);
 
