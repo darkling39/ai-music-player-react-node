@@ -29,3 +29,6 @@ __pycache__/
 # IDE / local tooling
 .idea/
 .claude/skills/
+
+# Logs
+*.log
