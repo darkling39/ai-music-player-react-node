@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Score {
+  id        String        @id @default(cuid())
+  title     String
+  composer  String?
+  tempoBpm  Int
+  measures  Int
+  notesJson String
+  createdAt DateTime      @default(now())
+  attempts  Attempt[]
+}
+
+model Attempt {
+  id         String   @id @default(cuid())
+  scoreId    String
+  score      Score    @relation(fields: [scoreId], references: [id])
+  audioPath  String
+  status     String   @default("pending")
+  resultJson String?
+  createdAt  DateTime @default(now())
+}

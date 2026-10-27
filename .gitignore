@@ -3,3 +3,25 @@
 
 # Ada Library Information
 *.ali
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Backend
+*.db
+*.db-journal
+*.tsbuildinfo
+backend/src/generated/
+backend/uploads/
+
+# Python
+__pycache__/
+.venv/

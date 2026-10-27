@@ -1,0 +1,20 @@
+{
+  "name": "ai-music-teacher",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,api,asr -c cyan,magenta,yellow \"npm:dev:web\" \"npm:dev:api\" \"npm:dev:asr\"",
+    "dev:web": "npm run dev -w frontend",
+    "dev:api": "npm run start:dev -w backend",
+    "dev:asr": "python transcriber/main.py",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "test": "npm run test -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
