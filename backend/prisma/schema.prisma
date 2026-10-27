@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Score {
-  id        String        @id @default(cuid())
-  title     String
-  composer  String?
-  tempoBpm  Int
-  measures  Int
-  notesJson String
-  createdAt DateTime      @default(now())
-  attempts  Attempt[]
+  id              String    @id @default(cuid())
+  title           String
+  composer        String?
+  tempoBpm        Int
+  beatsPerMeasure Float
+  measures        Int
+  notesJson       String
+  createdAt       DateTime  @default(now())
+  attempts        Attempt[]
 }
 
 model Attempt {
