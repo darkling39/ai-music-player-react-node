@@ -14,11 +14,15 @@ export type ErrorType = 'missed' | 'extra' | 'wrong_pitch' | 'early' | 'late';
 
 export interface PerformanceError {
   type: ErrorType;
-  /** 1-based measure number in the reference score. */
+  /** 1-based measure number in the reference score (for 'extra', where the stray note fell). */
   measure: number;
-  expected?: NoteEvent;
-  played?: NoteEvent;
-  /** Signed timing deviation in ms (positive = late). */
+  /** Beat inside the measure, as in {@link ScoreNote.beat}. */
+  beat: number;
+  /** MIDI pitch the score asks for. Absent for 'extra'. */
+  expectedPitch?: number;
+  /** MIDI pitch that was actually played. Absent for 'missed'. */
+  playedPitch?: number;
+  /** Signed timing deviation in ms (positive = late). Only for 'early' / 'late'. */
   deviationMs?: number;
 }
 

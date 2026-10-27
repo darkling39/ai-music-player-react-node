@@ -1,0 +1,12 @@
+WARNING:root:Coremltools is not installed. If you plan to use a CoreML Saved Model, reinstall basic-pitch with `pip install 'basic-pitch[coreml]'`
+WARNING:root:tflite-runtime is not installed. If you plan to use a TFLite Model, reinstall basic-pitch with `pip install 'basic-pitch tflite-runtime'` or `pip install 'basic-pitch[tf]'
+WARNING:root:Tensorflow is not installed. If you plan to use a TF Saved Model, reinstall basic-pitch with `pip install 'basic-pitch[tf]'`
+INFO:     Started server process [27832]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:57387 - "GET /health HTTP/1.1" 200 OK
+Predicting MIDI for C:\Users\mafio\AppData\Local\Temp\tmpxsd7ulpl\audio.wav...
+INFO:     127.0.0.1:57393 - "POST /transcribe HTTP/1.1" 200 OK
+Predicting MIDI for C:\Users\mafio\AppData\Local\Temp\tmpvcx9bobs\audio.wav...
+INFO:     127.0.0.1:50231 - "POST /transcribe HTTP/1.1" 200 OK
